@@ -30,6 +30,32 @@ class commentController extends BaseController {
             res.status(500).json({ error: error.message });
         }
     }
+
+    async deleteComment(req, res) {
+        const commentId = req.params.commentId;
+        const userId = req.user.id;
+
+        try {
+            const result = await this.service.commentService.deleteComment(commentId, userId);
+            res.status(200).json(result);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+
+    async updateComment(req, res) {
+        const commentId = req.params.commentId;
+        const userId = req.user.id;
+        const updateData = req.body;
+
+        try {
+            const result = await this.service.commentService.updateComment(commentId, userId, updateData);
+            
+            res.status(200).json(result);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
 }
 
 

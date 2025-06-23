@@ -48,7 +48,8 @@ router.delete("/categories/:id", authMiddleware, roleMiddleware("admin"), (req, 
 // comments routes
 router.post("/comments", authMiddleware, (req, res) => commentController.createComment(req, res));
 router.get("/comments/post/:postId", authMiddleware, (req, res) => commentController.getCommentsByPost(req, res));
-
+router.delete("/comments/:id", authMiddleware, (req, res) => commentController.deleteComment(req, res));
+router.put("/comments/:id", authMiddleware, (req, res) => commentController.updateComment(req, res));
 // like routes
 router.post('/like/:postId', authMiddleware, likeController.ToggleLike.bind(likeController));
 
