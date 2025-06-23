@@ -35,6 +35,8 @@ class commentController extends BaseController {
         const commentId = Number(req.params.commentId);
         const userId = req.user.id;
 
+        console.log("Delete comment id:", commentId, "userId:", userId);
+
         if (isNaN(commentId)) {
             return res.status(400).json({ error: 'Geçersiz commentId' });
         }
