@@ -1,6 +1,7 @@
 const { where } = require("sequelize");
 const BaseService = require("../core/base_service");
 const db = require("../db/index");
+const { message } = require("../validators/userSchema");
 class commentService extends BaseService {
     constructor() {
         super(db.Comment);
@@ -49,6 +50,8 @@ class commentService extends BaseService {
         if (deletedRows === 0) {
             throw new Error('Yorum bulunamadı veya silme yetkiniz yok');
         }
+
+        return {message: "Yorum başarıyla silindi"}
     
     }
 
