@@ -44,7 +44,12 @@ class commentService extends BaseService {
         if (!comment) {
             throw new Error('Yorum bulunamadı');
         }
-        return comment;
+
+        if (comment.user_id !== userId) {
+            throw new Error('Bu yorumu silme yetkiniz yok');
+        }
+
+        await comment.destroy();
     }
 
 

@@ -42,7 +42,7 @@ class commentController extends BaseController {
 
         try {
             const result = await this.service.commentService.deleteComment(commentId, userId);
-            res.status(200).json({ message: 'Yorum başarıyla silindi.', data: result });
+            res.status(200).json(result);
         } catch (error) {
             console.error('Delete comment error:', error);
             res.status(403).json({ error: error.message });
