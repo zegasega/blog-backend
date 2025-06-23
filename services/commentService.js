@@ -28,6 +28,24 @@ class commentService extends BaseService {
             order: [['created_at', 'ASC']],
         });
     }
+
+    async updateComment(commentId, user_Id,updateData) {
+        const comment = await this.db.Comment.findByPk(commentId);
+        if (!comment) throw new Error("Comment not found");
+        if (comment.user_id !== user_Id) throw new Error("You don't have permission to update this comment");
+        return await comment.update(updateData);
+    }
+
+    async deleteComment(commentId, user_Id) {
+        const comment = await this.db.Comment.findByPk(commentId);
+        if (!comment) throw new Error("Comment not found");
+        if (comment.user_id !== user_Id) throw new Error("You don't have permission to delete this comment");
+        return await comment.destroy();
+
+
+    }
+
+
 }
 
 module.exports = new commentService();

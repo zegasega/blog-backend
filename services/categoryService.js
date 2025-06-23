@@ -22,6 +22,7 @@ class categoryService extends BaseService {
     async getCategoryById(categoryId) {
         const category = await this.db.Category.findByPk(categoryId, {
             include: [{ model: this.db.Post, as: 'posts' }]
+
         });
         if (!category) {
             throw new Error("Category not found");
