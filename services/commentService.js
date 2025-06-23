@@ -1,3 +1,4 @@
+const { where } = require("sequelize");
 const BaseService = require("../core/base_service");
 const db = require("../db/index");
 class commentService extends BaseService {
@@ -30,14 +31,16 @@ class commentService extends BaseService {
     }
 
     async updateComment(commentId, userId, updateData) {
-        const comment = await this.db.Comment.findOne(commentId);
+        const comment = await this.db.Comment.findOne({
+            where: { id: commentId }
+        });
         if (!comment) throw new Error("Comment not found");
         if (comment.user_id !== userId) throw new Error("You don't have permission to update this comment");
         return await comment.update(updateData);
     }
 
     async deleteComment(commentId, userId) {
-        const comment = await this.db.Comment.findByPk(commentId);
+        const comment = await this.db.Comment.findByPk({where: { id: commentId }});
         if (!comment) throw new Error("Comment not found");
         if (comment.user_id !== userId) throw new Error("You don't have permission to delete this comment");
         return await comment.destroy();
