@@ -38,13 +38,13 @@ class commentService extends BaseService {
         if (comment.user_id !== userId) throw new Error("You don't have permission to update this comment");
         return await comment.update(updateData);
     }
-
+    // deleteee
     async deleteComment(commentId, userId) {
         const comment = await this.db.Comment.findByPk(commentId);
         if (!comment) {
             throw new Error('Yorum bulunamadı');
         }
-        
+
         await comment.destroy();
     }
 
