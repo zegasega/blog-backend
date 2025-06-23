@@ -27,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     is_published: {
       type: DataTypes.BOOLEAN,
+      defaultValue: true,
       defaultValue: false,
     },
     created_at: {
@@ -36,6 +37,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     updated_at: {
       type: DataTypes.DATE,
+      defaaultValue: DataTypes.Now,
       allowNull: true,
     },
   }, {

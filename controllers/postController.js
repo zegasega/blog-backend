@@ -55,7 +55,6 @@ class postController extends BaseController {
         try {
             const postId = req.params.id;
             const userId = req.user.id;
-
             const { title, content, category_id } = req.body;
 
             const updateData = {
@@ -63,6 +62,16 @@ class postController extends BaseController {
                 content,
                 category_id,
             };
+
+            if (req.file) {
+                const { url } = await this.service.cloudinaryService.uploadImage(req.file.path);
+                
+                fs.unlink(req.file.path, (err) => {
+                    if (err) console.error("Geçici dosya silinemedi:", err);
+                });
+
+                updateData.image_url = url;
+            }
 
             const updatedPost = await this.service.postService.updatePost({
                 postId,
@@ -72,9 +81,11 @@ class postController extends BaseController {
 
             res.status(200).json(updatedPost);
         } catch (error) {
+            console.error("Post güncellenirken hata:", error);
             res.status(403).json({ error: error.message });
         }
     }
+
 
 
 
