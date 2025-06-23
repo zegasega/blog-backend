@@ -53,39 +53,35 @@ class postController extends BaseController {
 
     async updatePost(req, res) {
         try {
-            const postId = req.params.id;
-            const userId = req.user.id;
-            const { title, content, category_id } = req.body;
+        const postId = req.params.id;
+        const userId = req.user.id;
 
-            const updateData = {
-                title,
-                content,
-                category_id,
-            };
+        const { title = "", content = "", category_id = null } = req.body || {};
 
-            if (req.file) {
-                const { url } = await this.service.cloudinaryService.uploadImage(req.file.path);
-                
-                fs.unlink(req.file.path, (err) => {
-                    if (err) console.error("Geçici dosya silinemedi:", err);
-                });
+        const updateData = {
+            title,
+            content,
+            category_id,
+        };
 
-                updateData.image_url = url;
-            }
+        if (req.file) {
+            const { url } = await this.service.cloudinaryService.uploadImage(req.file.path);
+            await unlinkFile(req.file.path);
+            updateData.image_url = url;
+        }
 
-            const updatedPost = await this.service.postService.updatePost({
-                postId,
-                userId,
-                updateData,
-            });
+        const updatedPost = await this.service.postService.updatePost({
+            postId,
+            userId,
+            updateData,
+        });
 
-            res.status(200).json(updatedPost);
+        res.status(200).json(updatedPost);
         } catch (error) {
-            console.error("Post güncellenirken hata:", error);
-            res.status(403).json({ error: error.message });
+        console.error("Post güncellenirken hata:", error);
+        res.status(403).json({ error: error.message });
         }
     }
-
 
 
 
