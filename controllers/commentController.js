@@ -50,7 +50,16 @@ class commentController extends BaseController {
 
         try {
             const result = await this.service.commentService.updateComment(commentId, userId, updateData);
-            
+
+            res.status(200).json(result);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+
+    async getAllComments(req, res) {
+        try {
+            const result = await this.service.commentService.getAllComments();
             res.status(200).json(result);
         } catch (error) {
             res.status(500).json({ error: error.message });

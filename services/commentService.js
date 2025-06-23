@@ -50,6 +50,11 @@ class commentService extends BaseService {
         return await comment.destroy();
     }
 
+    async getAllComments(){
+        return await this.db.Comment.findAll();
+    }
+
+
 }
 
 module.exports = new commentService();
