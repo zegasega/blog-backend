@@ -30,7 +30,7 @@ class commentService extends BaseService {
     }
 
     async updateComment(commentId, userId, updateData) {
-        const comment = await this.db.Comment.findByPk(commentId);
+        const comment = await this.db.Comment.findOne(commentId);
         if (!comment) throw new Error("Comment not found");
         if (comment.user_id !== userId) throw new Error("You don't have permission to update this comment");
         return await comment.update(updateData);
@@ -42,8 +42,6 @@ class commentService extends BaseService {
         if (comment.user_id !== userId) throw new Error("You don't have permission to delete this comment");
         return await comment.destroy();
     }
-
-
 
 }
 
