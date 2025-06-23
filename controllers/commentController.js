@@ -32,10 +32,9 @@ class commentController extends BaseController {
     }
 
     async deleteComment(req, res) {
+        // URL parametresinden commentId alınıyor
         const commentId = Number(req.params.commentId);
         const userId = req.user.id;
-
-        console.log("Delete comment id:", commentId, "userId:", userId);
 
         if (isNaN(commentId)) {
             return res.status(400).json({ error: 'Geçersiz commentId' });
@@ -43,7 +42,7 @@ class commentController extends BaseController {
 
         try {
             const result = await this.service.commentService.deleteComment(commentId, userId);
-            res.status(200).json(result);
+            res.status(200).json({ message: 'Yorum başarıyla silindi.', data: result });
         } catch (error) {
             console.error('Delete comment error:', error);
             res.status(403).json({ error: error.message });

@@ -40,19 +40,15 @@ class commentService extends BaseService {
     }
 
     async deleteComment(commentId, userId) {
-        // commentId'nin sayısal olduğundan emin ol
-        if (typeof commentId !== 'number' || isNaN(commentId)) {
-            throw new Error('Invalid commentId');
-        }
-
         const comment = await this.db.Comment.findByPk(commentId);
         if (!comment) {
-            throw new Error('Comment not found');
+            throw new Error('Yorum bulunamadı');
         }
         if (comment.user_id !== userId) {
-            throw new Error("You don't have permission to delete this comment");
+            throw new Error('Yorumu silmek için yetkiniz yok');
         }
-        return await comment.destroy();
+        await comment.destroy();
+        return { deleted: true, commentId };
     }
 
 
