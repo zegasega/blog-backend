@@ -31,17 +31,21 @@ class commentController extends BaseController {
         }
     }
 
-    async deleteComment(req, res) {
+   async deleteComment(req, res) {
         const commentId = req.params.commentId;
         const userId = req.user.id;
+
+        console.log("Controller deleteComment:", { commentId, userId });
 
         try {
             const result = await this.service.commentService.deleteComment(commentId, userId);
             res.status(200).json(result);
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            console.error("Delete comment error:", error);
+            res.status(403).json({ error: error.message });
         }
     }
+
 
     async updateComment(req, res) {
         const commentId = req.params.commentId;

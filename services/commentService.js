@@ -40,15 +40,24 @@ class commentService extends BaseService {
     }
 
     async deleteComment(commentId, userId) {
-        const comment = await this.db.Comment.findByPk(commentId);
-        if (!comment){
+        console.log("Delete comment id:", commentId);
+        const id = Number(commentId);
+        const comment = await this.db.Comment.findByPk(id);
+
+        if (!comment) {
+            console.log("Comment bulunamadı, id:", id);
             throw new Error("Comment not found");
         }
-        if (comment.user_id !== userId){
+
+        if (comment.user_id.toString() !== userId.toString()) {
             throw new Error("You don't have permission to delete this comment");
-        } 
-        return await comment.destroy();
+        }
+
+        await comment.destroy();
+
+        return { message: "Comment deleted successfully" };
     }
+
 
     async getAllComments(){
         return await this.db.Comment.findAll();
