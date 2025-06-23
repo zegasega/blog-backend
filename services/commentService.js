@@ -40,12 +40,16 @@ class commentService extends BaseService {
     }
     // deleteee
     async deleteComment(commentId, userId) {
-        const comment = await this.db.Comment.findByPk(commentId);
-        if (!comment) {
-            throw new Error('Yorum bulunamadı');
+        const deletedRows = await this.db.Comment.destroy({
+            where: {
+                id: commentId,
+                user_id: userId
+            }
+        });
+        if (deletedRows === 0) {
+            throw new Error('Yorum bulunamadı veya silme yetkiniz yok');
         }
-
-        await comment.destroy();
+    
     }
 
 
