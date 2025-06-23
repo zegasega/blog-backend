@@ -56,7 +56,7 @@ class postController extends BaseController {
         const postId = req.params.id;
         const userId = req.user.id;
 
-        const { title = "", content = "", category_id = null } = req.body || {};
+        const { title = "", content = "", category_id } = req.body || {};
 
         const updateData = {
             title,
