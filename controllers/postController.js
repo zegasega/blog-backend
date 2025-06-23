@@ -11,7 +11,7 @@ class postController extends BaseController {
         try {
             const userId = req.user.id;
 
-            
+
             let imageUrl = null;
             if (req.file) {
                 const { url } = await this.service.cloudinaryService.uploadImage(req.file.path);
@@ -56,40 +56,22 @@ class postController extends BaseController {
             const postId = req.params.id;
             const userId = req.user.id;
 
-            // form-data'dan gelen text alanlarını al
             const { title, content, category_id } = req.body;
 
-            // Güncellenecek veriyi sadece dolu alanlarla oluştur
-            const updateData = {};
-            if (title !== undefined) updateData.title = title;
-            if (content !== undefined) updateData.content = content;
-            if (category_id !== undefined) updateData.category_id = category_id;
+            const updateData = {
+                title,
+                content,
+                category_id,
+            };
 
-            // Eğer dosya varsa, Cloudinary'ye yükle ve URL'yi ekle
-            if (req.file) {
-            const { url } = await this.service.cloudinaryService.uploadImage(req.file.path);
-
-            // Geçici dosyayı sil (async/await ile)
-            try {
-                await fs.unlink(req.file.path);
-            } catch (unlinkErr) {
-                console.error("Geçici dosya silinemedi:", unlinkErr);
-            }
-
-            updateData.image_url = url;
-            }
-
-            // Post servisinde güncelleme yap
             const updatedPost = await this.service.postService.updatePost({
-            postId,
-            userId,
-            updateData,
+                postId,
+                userId,
+                updateData,
             });
 
             res.status(200).json(updatedPost);
-
         } catch (error) {
-            console.error("Post güncellenirken hata:", error);
             res.status(403).json({ error: error.message });
         }
     }
@@ -97,10 +79,11 @@ class postController extends BaseController {
 
 
 
+
     async deletePost(req, res) {
         try {
             const postId = req.params.id;
-            const userId = req.user.id;  
+            const userId = req.user.id;
             const result = await this.service.postService.deletePost(postId, userId);
 
             res.status(200).json(result);
