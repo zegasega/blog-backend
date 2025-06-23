@@ -34,6 +34,9 @@ router.post("/posts", upload.single("image") ,authMiddleware,(req, res) => postC
 router.put("/posts/:id", authMiddleware, (req, res) => postController.updatePost(req, res));
 router.delete("/posts/:id", authMiddleware, (req, res) => postController.deletePost(req, res));
 router.get("/post/user/me", authMiddleware, (req, res) => postController.getPostsByUserId(req, res));
+router.post('/posts/:id/image', upload.single('image'), (req, res) => postController.updatePostImage(req, res));
+
+
 
 // Category routes
 router.get("/categories", authMiddleware, (req, res) => categoriyController.getAll(req, res));

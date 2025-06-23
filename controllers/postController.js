@@ -114,6 +114,34 @@ class postController extends BaseController {
         }
     }
 
+    async updatePostImage(req, res) {
+        try {
+            const postId = req.params.id;
+            if (!req.file) {
+                return res.status(400).json({ error: "Dosya yüklenmedi" });
+            }
+
+
+            const { url } = await this.service.cloudinaryService.uploadImage(req.file.path);
+
+            // Geçici dosyayı sil
+            fs.unlink(req.file.path, (err) => {
+                if (err) console.error("Geçici dosya silinemedi:", err);
+            });
+
+            // Post serviste resmi güncelle
+            const updatedPost = await this.service.postService.updatePostImage(postId, url);
+
+            res.status(200).json({
+                message: "Post resmi başarıyla güncellendi",
+                post: updatedPost
+            });
+        } catch (error) {
+            console.error("Post resmi güncellenirken hata:", error);
+            res.status(500).json({ error: error.message });
+        }
+    }
+
 
 }
 

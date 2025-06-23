@@ -64,6 +64,18 @@ class PostService extends BaseService {
             ],
         });
     }
+
+    async updatePostImage(post_id, imageUrl) {
+        const post = await this.db.Post.findByPk(post_id);
+        if (!post) {
+            throw new Error("Post bulunamadı");
+        }
+
+        post.image_url = imageUrl;
+        await post.save();
+
+        return post;
+    }
 }
 
 module.exports = new PostService();
