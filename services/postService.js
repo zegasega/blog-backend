@@ -63,7 +63,7 @@ class PostService extends BaseService {
                 {
                     model: this.db.Like,
                     as: 'likes',
-                    attributes: [], // Sadece count lazım, bireysel like verisi değil
+                    attributes: ["id"], // Sadece count lazım, bireysel like verisi değil
                 }
             ],
             group: ['Post.id', 'author.id', 'category.id'],
