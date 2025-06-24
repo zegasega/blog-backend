@@ -46,7 +46,7 @@ class PostService extends BaseService {
         });
     }
 
-    
+
 
     async getAllPosts() {
         const { fn, col } = this.db.Sequelize;
@@ -58,17 +58,32 @@ class PostService extends BaseService {
                 ]
             },
             include: [
-                { model: this.db.User, as: "author", attributes: ["id", "username"] },
-                { model: this.db.Category, as: "category", attributes: ["id", "name"] },
+                {
+                    model: this.db.User,
+                    as: "author",
+                    attributes: ["id", "username"]
+                },
+                {
+                    model: this.db.Category,
+                    as: "category",
+                    attributes: ["id", "name"]
+                },
                 {
                     model: this.db.Like,
                     as: 'likes',
-                    attributes: ["id"], // Sadece count lazım, bireysel like verisi değil
+                    attributes: ['user_id'] // ✅ like atan kullanıcıların id'si
                 }
             ],
-            group: ['Post.id', 'author.id', 'category.id'],
+            group: [
+                'Post.id',
+                'author.id',
+                'category.id',
+                'likes.id',        // 👈 Ekledik çünkü likes.user_id alıyoruz
+                'likes.user_id'    // 👈 MySQL ONLY_FULL_GROUP_BY için gerekli
+            ]
         });
     }
+
 
 
     async getPostsByUserId(userId) {
