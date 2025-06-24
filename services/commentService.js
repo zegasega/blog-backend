@@ -31,24 +31,20 @@ class commentService extends BaseService {
         });
     }
 
-    async updateComment(req, res) {
-        const commentId = req.params.commentId;
+    async updateComment(commentId, userId, updateData) {
+        const comment = await this.db.Comment.findOne({
+            where: {
+                id: commentId,
+                user_id: userId
+            }
+        });
 
-        if (!commentId) {
-            return res.status(400).json({ error: 'Missing commentId in request parameters' });
+        if (!comment) {
+            throw new Error('Yorum bulunamadı veya yetkiniz yok');
         }
 
-        const userId = req.user.id;
-        const updateData = req.body;
-
-        try {
-            const result = await this.service.commentService.updateComment(commentId, userId, updateData);
-            res.status(200).json(result);
-        } catch (error) {
-            res.status(500).json({ error: error.message });
-        }
+        return await comment.update(updateData);
     }
-
 
 
     async deleteComment(commentId, userId) {
