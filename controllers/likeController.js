@@ -18,6 +18,16 @@ class likeController extends BaseController {
             res.status(500).json({ error: error.message });
         }
     }
+
+    async GetLikesByPostId(req, res) {
+        try {
+            const postId = req.params.postId;
+            const result = await this.service.likeService.getLikesByPostId(postId);
+            res.status(200).json(result);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
 }
 
 module.exports = new likeController();

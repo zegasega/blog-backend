@@ -22,6 +22,10 @@ class likeService extends BaseService {
       return { message: "post liked" };
     }
   }
+
+  async getLikesByPostId(postId) {
+    return await this.db.Like.findAll({ where: { post_id: postId } });
+  }
 }
 
 module.exports = new likeService();
