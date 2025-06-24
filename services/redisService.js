@@ -3,8 +3,8 @@ const Redis = require('ioredis');
 class RedisService {
     constructor() {
         this.redis = new Redis({
-            host: 'redis.railway.internal',  
-            port: 6379,         
+            host: 'ballast.proxy.rlwy.net',  
+            port: 21827,         
             password: 'cCWTxxNlNBIplqDrKmCXFxwdVEwFLRBV' 
         });
 
