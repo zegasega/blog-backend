@@ -40,6 +40,7 @@ class PostService extends BaseService {
             if (post.user_id !== userId) throw new Error("Başkasının postunu silemezsin");
 
             await this.db.Comment.destroy({ where: { post_id: postId }, transaction: t });
+            await this.db.Like.destroy({ where: { post_id: postId }, transaction: t });
             await post.destroy({ transaction: t });
 
             return { message: "Post başarıyla silindi" };
