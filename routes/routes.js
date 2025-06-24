@@ -50,8 +50,8 @@ router.post("/comments", authMiddleware, (req, res) => commentController.createC
 router.get("/comments/post/:postId", authMiddleware, (req, res) => commentController.getCommentsByPost(req, res));
 router.delete("/comments/delete/:commentId", authMiddleware, (req, res) => commentController.deleteComment(req, res));
 router.put("/comments/:commentId", authMiddleware, (req, res) => commentController.updateComment(req, res));
-
 router.get("/comments", authMiddleware, (req, res) => commentController.getAllComments(req, res));
+
 // like routes
 router.post('/like/:postId', authMiddleware, likeController.ToggleLike.bind(likeController));
 router.get("/like/post/:postId", authMiddleware,(req, res) => likeController.GetLikesByPostId(req, res));
