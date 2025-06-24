@@ -51,7 +51,6 @@ class PostService extends BaseService {
             include: [
                 { model: this.db.User, as: "author", attributes: ["id", "username"] },
                 { model: this.db.Category, as: "category", attributes: ["id", "name"] },
-                {model : this.db.Likes, as : 'likes', attributes : ['id', 'user_id', 'post_id']}
             ],
         });
     }
