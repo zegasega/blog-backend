@@ -49,14 +49,7 @@ class PostService extends BaseService {
 
 
     async getAllPosts() {
-        const { fn, col } = this.db.Sequelize;
-
         return await this.db.Post.findAll({
-            attributes: {
-                include: [
-                    [fn('COUNT', col('likes.id')), 'likeCount']
-                ]
-            },
             include: [
                 {
                     model: this.db.User,
@@ -71,18 +64,12 @@ class PostService extends BaseService {
                 {
                     model: this.db.Like,
                     as: 'likes',
-                    attributes: ['user_id'] // ✅ like atan kullanıcıların id'si
+                    attributes: ['user_id']
                 }
-            ],
-            group: [
-                'Post.id',
-                'author.id',
-                'category.id',
-                'likes.id',        // 👈 Ekledik çünkü likes.user_id alıyoruz
-                'likes.user_id'    // 👈 MySQL ONLY_FULL_GROUP_BY için gerekli
             ]
         });
     }
+
 
 
 
