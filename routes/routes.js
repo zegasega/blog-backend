@@ -54,7 +54,7 @@ router.put("/comments/:commentId", authMiddleware, (req, res) => commentControll
 router.get("/comments", authMiddleware, (req, res) => commentController.getAllComments(req, res));
 // like routes
 router.post('/like/:postId', authMiddleware, likeController.ToggleLike.bind(likeController));
-router.post("/like/:postId", authMiddleware,(req, res) => likeController.GetLikesByPostId(req, res));
+router.post("/like/post/:postId", authMiddleware,(req, res) => likeController.GetLikesByPostId(req, res));
 
 
 module.exports = router;
