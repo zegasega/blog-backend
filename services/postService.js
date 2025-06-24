@@ -46,14 +46,28 @@ class PostService extends BaseService {
         });
     }
 
+    
+
     async getAllPosts() {
         return await this.db.Post.findAll({
+            attributes: {
+                include: [
+                    [fn('COUNT', col('likes.id')), 'likeCount']
+                ]
+            },
             include: [
                 { model: this.db.User, as: "author", attributes: ["id", "username"] },
                 { model: this.db.Category, as: "category", attributes: ["id", "name"] },
+                {
+                    model: this.db.Like,
+                    as: 'likes',
+                    attributes: [], // Sadece count lazım, bireysel like verisi değil
+                }
             ],
+            group: ['Post.id', 'author.id', 'category.id'],
         });
     }
+
 
     async getPostsByUserId(userId) {
         return await this.db.Post.findAll({
