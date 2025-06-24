@@ -1,3 +1,4 @@
+const { post } = require("../app");
 const BaseService = require("../core/base_service");
 const db = require("../db/index");
 
@@ -16,7 +17,7 @@ class likeService extends BaseService {
     if (existingLike) {
 
       await existingLike.destroy();
-      return { message: "post unliked" };
+      return { message: "post unliked", post_id: postId };
     } else {
       await this.model.create({ user_id: userId, post_id: postId });
       return { message: "post liked", post_id: postId };
