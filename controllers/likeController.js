@@ -13,7 +13,8 @@ class likeController extends BaseController {
             const userId = req.user.id;
             const postId = req.params.postId;
             const result = await this.service.likeService.toggleLike({ userId, postId });
-            res.status(200).json(result)
+            const post = await this.service.postService.getPostById(postId);
+            res.status(200).json({ post, result });
         } catch (error) {
             res.status(500).json({ error: error.message });
         }

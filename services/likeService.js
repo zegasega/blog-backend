@@ -19,7 +19,7 @@ class likeService extends BaseService {
       return { message: "post unliked" };
     } else {
       await this.model.create({ user_id: userId, post_id: postId });
-      return { message: "post liked" };
+      return { message: "post liked", post_id: postId };
     }
   }
 
