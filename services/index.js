@@ -7,5 +7,6 @@ service.categoryService = require("./categoryService");
 service.commentService = require("./commentService");
 service.likeService = require("./likeService");
 service.cloudinaryService = require("./cloudinaryService");
+service.redisService = require("./redisService");
 
 module.exports = service;

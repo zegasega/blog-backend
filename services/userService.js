@@ -1,5 +1,6 @@
 const BaseService = require("../core/base_service");
 const db = require("../db/index");
+const RedisService = require('../services/redisService'); // yolu kendi projen yapısına göre ayarla
 
 class userService extends BaseService {
     constructor() {
@@ -39,25 +40,43 @@ class userService extends BaseService {
         };
     }
 
-    async login(email, password) {
 
+    async login(email, password) {
         const user = await this.db.User.findOne({
-            where: {
-                email: email
-            }
+            where: { email }
         });
+
         if (!user) {
             throw new Error("User not found");
         }
 
-        const isPasswordValid = this.Utils.comparePassword(password, user.password);
-        if (!isPasswordValid) {
-            throw new Error("Invalid password");
+        const isBlocked = await RedisService.isBlocked(user.id);
+        if (isBlocked) {
+            throw new Error("Too many failed login attempts. Try again in 15 minutes.");
         }
 
-        const accessToken = this.Utils.generateAccessToken({ id: user.id, username: user.username, role: user.role, jwtTokenVersion: user.jwtTokenVersion });
-        const refreshToken = this.Utils.generateRefreshToken({ id: user.id, username: user.username, role: user.role, jwtTokenVersion: user.jwtTokenVersion });
+        const isPasswordValid = this.Utils.comparePassword(password, user.password);
 
+        if (!isPasswordValid) {
+            const attempt = await RedisService.incrementWrongPassword(user.id);
+            throw new Error(`Invalid password. Attempt ${attempt}/5`);
+        }
+
+        await RedisService.clearWrongPasswordAttempts(user.id);
+
+        const accessToken = this.Utils.generateAccessToken({
+            id: user.id,
+            username: user.username,
+            role: user.role,
+            jwtTokenVersion: user.jwtTokenVersion
+        });
+
+        const refreshToken = this.Utils.generateRefreshToken({
+            id: user.id,
+            username: user.username,
+            role: user.role,
+            jwtTokenVersion: user.jwtTokenVersion
+        });
 
         return {
             message: "Login successful",
@@ -70,6 +89,7 @@ class userService extends BaseService {
             refreshToken
         };
     }
+
 
     async logout(userId) {
         const user = await this.db.User.findByPk(userId);
