@@ -121,7 +121,6 @@ class postController extends BaseController {
                 return res.status(400).json({ error: "Dosya yüklenmedi" });
             }
 
-
             const { url } = await this.service.cloudinaryService.uploadImage(req.file.path);
 
             // Geçici dosyayı sil

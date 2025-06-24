@@ -1,7 +1,5 @@
 const BaseService = require("../core/base_service");
-
 const db = require("../db/index");
-const role = require("../middleware/role");
 
 class userService extends BaseService {
     constructor() {
@@ -140,7 +138,7 @@ class userService extends BaseService {
         }
     }
 
-    async getAllUsers()  {
+    async getAllUsers() {
         const users = await this.db.User.findAll({
             attributes: ['id', 'username', 'email']
         });

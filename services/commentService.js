@@ -31,15 +31,21 @@ class commentService extends BaseService {
         });
     }
 
-    async updateComment(commentId, userId, updateData) {
-        console.log('updateComment params:', { commentId, userId, updateData });
-
+    async updateComment(commentId, currentUserId, updateData) {
         const comment = await this.db.Comment.findOne({
-            where: { id: commentId }
+            where: {
+                id: commentId,
+                user_id: currentUserId
+            }
         });
 
-        if (!comment) throw new Error("Comment not found");
-        if (comment.user_id !== userId) throw new Error("You don't have permission to update this comment");
+        if (!comment) {
+            throw new Error('Comment not found');
+        }
+
+        if (comment.user_id !== currentUserId) {
+            throw new Error('You do not have permission to update this comment');
+        }
 
         return await comment.update(updateData);
     }
