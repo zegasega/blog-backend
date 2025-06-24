@@ -31,26 +31,26 @@ class commentService extends BaseService {
         });
     }
 
-    async updateComment(commentId, currentUserId, updateData) {
-        const comment = await this.db.Comment.findOne({
-            where: {
-                id: commentId,
-                user_id: currentUserId
-            }
-        });
+    async updateComment(req, res) {
+        const commentId = req.params.commentId;
 
-        if (!comment) {
-            throw new Error('Comment not found');
+        if (!commentId) {
+            return res.status(400).json({ error: 'Missing commentId in request parameters' });
         }
 
-        if (comment.user_id !== currentUserId) {
-            throw new Error('You do not have permission to update this comment');
-        }
+        const userId = req.user.id;
+        const updateData = req.body;
 
-        return await comment.update(updateData);
+        try {
+            const result = await this.service.commentService.updateComment(commentId, userId, updateData);
+            res.status(200).json(result);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
     }
 
-    
+
+
     async deleteComment(commentId, userId) {
         const deletedRows = await this.db.Comment.destroy({
             where: {
@@ -62,13 +62,13 @@ class commentService extends BaseService {
             throw new Error('Yorum bulunamadı veya silme yetkiniz yok');
         }
 
-        return {message: "Yorum başarıyla silindi"}
-    
+        return { message: "Yorum başarıyla silindi" }
+
     }
 
 
 
-    async getAllComments(){
+    async getAllComments() {
         return await this.db.Comment.findAll();
     }
 
