@@ -26,7 +26,7 @@ class likeService extends BaseService {
 
   async getLikesByPostId(postId) {
    const like_count= await this.db.Like.findAll({ where: { post_id: postId } });
-    return like_count.length;
+    return like_count;
   }
 }
 
