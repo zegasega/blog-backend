@@ -49,6 +49,8 @@ class PostService extends BaseService {
     
 
     async getAllPosts() {
+        const { fn, col } = this.db.Sequelize;
+
         return await this.db.Post.findAll({
             attributes: {
                 include: [
