@@ -55,7 +55,7 @@ class userService extends BaseService {
             throw new Error("Too many failed login attempts. Try again in 15 minutes.");
         }
 
-        const isPasswordValid = this.Utils.comparePassword(password, user.password);
+        const isPasswordValid = await this.Utils.comparePassword(password, user.password);
 
         if (!isPasswordValid) {
             const attempt = await RedisService.incrementWrongPassword(user.id);
