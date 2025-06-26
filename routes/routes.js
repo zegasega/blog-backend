@@ -35,6 +35,7 @@ router.put("/posts/:id", authMiddleware, (req, res) => postController.updatePost
 router.delete("/posts/:id", authMiddleware, (req, res) => postController.deletePost(req, res));
 router.get("/post/user/me", authMiddleware, (req, res) => postController.getPostsByUserId(req, res));
 router.post('/posts/:id/image', upload.single('image'), (req, res) => postController.updatePostImage(req, res));
+router.get("/posts/pagination/:page/:limit", authMiddleware, (req, res) => postController.pagination(req, res));
 
 
 

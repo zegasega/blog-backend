@@ -113,6 +113,18 @@ class postController extends BaseController {
             res.status(500).json({ error: error.message });
         }
     }
+    async pagination(req, res) {
+        try {
+            const page = parseInt(req.params.page) || 1;
+            const limit = parseInt(req.params.limit) || 5;
+
+            const result = await this.service.postService.pagination(page, limit);
+            res.status(200).json(result);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+
 
     async updatePostImage(req, res) {
         try {

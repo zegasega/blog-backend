@@ -48,7 +48,7 @@ class PostService extends BaseService {
     }
 
 
-
+    // total record pagınatıon 5 er 5er getir"  
     async getAllPosts() {
         return await this.db.Post.findAll({
             include: [
@@ -95,6 +95,37 @@ class PostService extends BaseService {
 
         return post;
     }
+
+
+    async pagination(page = 1, limit = 5) {
+        page = Math.max(1, parseInt(page));
+        limit = Math.min(100, Math.max(1, parseInt(limit)));
+
+        const offset = (page - 1) * limit;
+
+        const total = await this.db.Post.count();
+
+        const results = await this.db.Post.findAll({
+            offset,
+            limit,
+            order: [['createdAt', 'DESC']],
+            include: [
+                { model: this.db.User, as: "author", attributes: ["id", "username"] },
+                { model: this.db.Category, as: "category", attributes: ["id", "name"] },
+            ],
+        });
+
+        const hasMore = offset + results.length < total;
+
+        return {
+            page,
+            limit,
+            total,
+            hasMore,
+            results
+        };
+    }
+
 }
 
 module.exports = new PostService();
