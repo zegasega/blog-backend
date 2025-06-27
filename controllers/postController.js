@@ -153,6 +153,15 @@ class postController extends BaseController {
         }
     }
 
+    async searchPost(req, res) {
+        try {
+            const query = req.query.query;
+            const result = await this.service.postService.searchPost(query);
+            res.status(200).json(result);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
 
 }
 
