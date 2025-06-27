@@ -126,6 +126,28 @@ class PostService extends BaseService {
         };
     }
 
+    async searchPost(query) {
+        return await this.db.Post.findAll({
+            where: {
+                title: {
+                    [this.db.Sequelize.Op.like]: `%${query}%`
+                }
+            },
+            include: [
+                {
+                    model: this.db.User,
+                    as: "author",
+                    attributes: ["username"]
+                },
+                {
+                    model: this.db.Category,
+                    as: "category",
+                    attributes: ["name"]
+                },
+            ],
+            order: [['createdAt', 'DESC']],
+        });
+    }
 }
 
 module.exports = new PostService();

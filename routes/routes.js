@@ -36,7 +36,7 @@ router.delete("/posts/:id", authMiddleware, (req, res) => postController.deleteP
 router.get("/post/user/me", authMiddleware, (req, res) => postController.getPostsByUserId(req, res));
 router.post('/posts/:id/image', upload.single('image'), (req, res) => postController.updatePostImage(req, res));
 router.get("/posts/pagination/:page/:limit", authMiddleware, (req, res) => postController.pagination(req, res));
-
+router.get("/posts/search", authMiddleware, (req, res) => postController.searchPost(req, res))
 
 
 // Category routes
