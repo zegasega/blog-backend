@@ -59,7 +59,7 @@ class userService extends BaseService {
 
         if (!isPasswordValid) {
             const attempt = await RedisService.incrementWrongPassword(user.id);
-            throw new Error(`Invalid password. Attempt ${attempt}/5`);
+            throw new Error(`Invalid password. Attempt ${attempt}/3`);
         }
 
         await RedisService.clearWrongPasswordAttempts(user.id);

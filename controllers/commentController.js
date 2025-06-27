@@ -53,19 +53,18 @@ class commentController extends BaseController {
 
     async updateComment(req, res) {
         const commentId = req.params.commentId;
-
-        if (!commentId) {
-            return res.status(400).json({ error: 'Missing commentId in request parameters' });
-        }
-
-        const userId = req.user.id;
+        const userId = req.user?.id;
         const updateData = req.body;
 
+        if (!commentId) {
+            return res.status(400).json({ error: 'commentId parametresi eksik' });
+        }
+
         try {
-            const result = await this.service.commentService.updateComment(commentId, userId, updateData);
-            res.status(200).json(result);
+            const updatedComment = await this.commentService.updateComment(commentId, userId, updateData);
+            return res.status(200).json(updatedComment);
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            return res.status(500).json({ error: error.message });
         }
     }
 
