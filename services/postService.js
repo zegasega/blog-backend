@@ -21,14 +21,14 @@ class PostService extends BaseService {
         const post = await this.db.Post.findByPk(postId, {
             include: [{ model: this.db.User, as: "author" }],
         });
-        if (!post) throw new Error("Post bulunamaduuuuı");
+        if (!post) throw new Error("Post not found");
         return post;
     }
 
     async updatePost({ postId, userId, updateData }) {
         const post = await this.db.Post.findByPk(postId);
-        if (!post) throw new Error("Post bulunamadı");
-        if (post.user_id !== userId) throw new Error("Bu postu güncelleme yetkiniz yok");
+        if (!post) throw new Error("Post not found");
+        if (post.user_id !== userId) throw new Error("You are not authorized to update this post");
 
         return await post.update(updateData);
     }
@@ -36,14 +36,14 @@ class PostService extends BaseService {
     async deletePost(postId, userId) {
         return await this.db.sequelize.transaction(async (t) => {
             const post = await this.db.Post.findByPk(postId, { transaction: t });
-            if (!post) throw new Error("Post bulunamadı");
-            if (post.user_id !== userId) throw new Error("Başkasının postunu silemezsin");
+            if (!post) throw new Error("Post not found");
+            if (post.user_id !== userId) throw new Error("You are not authorized to delete this post");
 
             await this.db.Comment.destroy({ where: { post_id: postId }, transaction: t });
             await this.db.Like.destroy({ where: { post_id: postId }, transaction: t });
             await post.destroy({ transaction: t });
 
-            return { message: "Post başarıyla silindi" };
+            return { message: "Post deleted successfully" };
         });
     }
 
@@ -51,6 +51,13 @@ class PostService extends BaseService {
     // total record pagınatıon 5 er 5er getir"  
     async getAllPosts() {
         return await this.db.Post.findAll({
+            // For better performance on a list view, consider getting only the count of likes
+            // instead of all the like objects. This can be done with a subquery.
+            attributes: {
+                include: [
+                    [this.db.sequelize.literal('(SELECT COUNT(*) FROM "Likes" WHERE "Likes"."post_id" = "Post"."id")'), 'likeCount']
+                ]
+            },
             include: [
                 {
                     model: this.db.User,
@@ -62,11 +69,7 @@ class PostService extends BaseService {
                     as: "category",
                     attributes: ["id", "name"]
                 },
-                {
-                    model: this.db.Like,
-                    as: 'likes',
-                    attributes: ['user_id']
-                }
+                // The 'likes' include is now replaced by the likeCount attribute above.
             ]
         });
     }
@@ -87,7 +90,7 @@ class PostService extends BaseService {
     async updatePostImage(post_id, imageUrl) {
         const post = await this.db.Post.findByPk(post_id);
         if (!post) {
-            throw new Error("Post bulunamadı");
+            throw new Error("Post not found");
         }
 
         post.image_url = imageUrl;
