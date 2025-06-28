@@ -3,13 +3,13 @@ const Redis = require('ioredis');
 class RedisService {
     constructor() {
         this.redis = new Redis({
-            host: 'ballast.proxy.rlwy.net',  
-            port: 21827,         
-            password: 'cCWTxxNlNBIplqDrKmCXFxwdVEwFLRBV' 
+            host: process.env.REDIS_HOST,  
+            port: process.env.REDIS_PORT,         
+            password: process.env.REDIS_PASSWORD, 
         });
 
-        this.maxAttempts = 3; // max 3 attempt
-        this.ttlSeconds = 900;  // 15 min block
+        this.maxAttempts = process.env.MAX_ATTEMPTS || 3; 
+        this.ttlSeconds = process.env.TTL_SECONDS || 15 * 60;  
     }
 
     getKey(key) {

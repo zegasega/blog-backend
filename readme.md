@@ -52,7 +52,7 @@ Manages the creation, retrieval, and modification of blog posts.
 | `GET`  | `/posts/:id`                  | Retrieves a single post by its ID.                 | Required       |                                     |
 | `PUT`  | `/posts/:id`                  | Updates a post.                                    | Required       | User must be the post author.       |
 | `DELETE`| `/posts/:id`                 | Deletes a post.                                    | Required       | User must be the post author.       |
-| `POST` | `/posts/:id/image`            | Updates the image for a specific post.             | Required       | Expects `multipart/form-data`.      |
+| `POST` | `/posts/:id/image`            | Uploads an image to a post.             | Required       | Expects `multipart/form-data`.      |
 
 ---
 

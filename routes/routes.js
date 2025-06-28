@@ -4,7 +4,7 @@ const userController = require("../controllers/userController");
 const authMiddleware = require("../middleware/auth");
 const roleMiddleware = require("../middleware/role");
 const postController = require("../controllers/postController");
-const categoriyController = require("../controllers/categoryController");
+const categoryController = require("../controllers/categoryController");
 const commentController = require("../controllers/commentController");
 const likeController = require("../controllers/likeController");
 const schemas = require("../validators/index");
@@ -12,50 +12,47 @@ const schemas = require("../validators/index");
 const multer = require('multer');
 const upload = multer({ dest: 'tmp/' });
 
-
 const validateBody = require("../middleware/validationMiddleware");
 
 // User routes
-router.get("/users", authMiddleware,  (req, res) => userController.getAllUsers(req, res));
-router.get("/users/:id", authMiddleware, (req, res) => userController.getUserById(req, res));
-router.get("/user/query", authMiddleware, (req, res) => userController.getUserByQuery(req, res));
+router.get("/users", authMiddleware, userController.getAllUsers);
+router.get("/users/query", authMiddleware, userController.getUserByQuery);
+router.get("/users/:id", authMiddleware, userController.getUserById);
 
-// User authentication routes
-router.post("/auth/register", validateBody(schemas.userSchema),(req, res) => userController.register(req, res));
-router.post("/auth/login", (req, res) => userController.login(req, res));
-router.post("/auth/logout", authMiddleware, (req, res) => userController.logout(req, res));
-router.put("/auth/user", authMiddleware, (req, res) => userController.update(req, res));
-router.delete("/auth/user", authMiddleware, (req, res) => userController.delete(req, res));
+// Auth routes
+router.post("/auth/register", validateBody(schemas.userSchema), userController.register);
+router.post("/auth/login", userController.login);
+router.post("/auth/logout", authMiddleware, userController.logout);
+router.put("/auth/user", authMiddleware, userController.update);
+router.delete("/auth/user", authMiddleware, userController.delete);
 
 // Post routes
-router.get("/posts", authMiddleware, (req, res) => postController.getAllPosts(req, res));
-router.get("/posts/:id", authMiddleware, (req, res) => postController.getPostById(req, res));
-router.post("/posts", upload.single("image") ,authMiddleware,(req, res) => postController.createPost(req, res));
-router.put("/posts/:id", authMiddleware, (req, res) => postController.updatePost(req, res));
-router.delete("/posts/:id", authMiddleware, (req, res) => postController.deletePost(req, res));
-router.get("/post/user/me", authMiddleware, (req, res) => postController.getPostsByUserId(req, res));
-router.post('/posts/:id/image', upload.single('image'), (req, res) => postController.updatePostImage(req, res));
-router.get("/posts/pagination/:page/:limit", authMiddleware, (req, res) => postController.pagination(req, res));
-router.get("/posts/search", authMiddleware, (req, res) => postController.searchPost(req, res))
-
+router.get("/posts", authMiddleware, postController.getAllPosts);
+router.get("/posts/search", authMiddleware, postController.searchPost);
+router.get("/posts/page/:page/limit/:limit", authMiddleware, postController.pagination);
+router.get("/users/me/posts", authMiddleware, postController.getPostsByUserId);
+router.get("/posts/:id", authMiddleware, postController.getPostById);
+router.post("/posts", upload.single("image"), authMiddleware, postController.createPost);
+router.put("/posts/:id", authMiddleware, postController.updatePost);
+router.delete("/posts/:id", authMiddleware, postController.deletePost);
+router.post("/posts/:id/image", upload.single("image"), authMiddleware, postController.updatePostImage);
 
 // Category routes
-router.get("/categories", authMiddleware, (req, res) => categoriyController.getAll(req, res));
-router.get("/categories/:id", authMiddleware, (req, res) => categoriyController.getById(req, res));
-router.post("/categories", authMiddleware, roleMiddleware("admin"),(req, res) => categoriyController.create(req, res));
-router.put("/categories/:id", authMiddleware,(req, res) => categoriyController.update(req, res));
-router.delete("/categories/:id", authMiddleware, roleMiddleware("admin"), (req, res) => categoriyController.delete(req, res));
+router.get("/categories", authMiddleware, categoryController.getAll);
+router.get("/categories/:id", authMiddleware, categoryController.getById);
+router.post("/categories", authMiddleware, roleMiddleware("admin"), categoryController.create);
+router.put("/categories/:id", authMiddleware, categoryController.update);
+router.delete("/categories/:id", authMiddleware, roleMiddleware("admin"), categoryController.delete);
 
-// comments routes
-router.post("/comments", authMiddleware, (req, res) => commentController.createComment(req, res));
-router.get("/comments/post/:postId", authMiddleware, (req, res) => commentController.getCommentsByPost(req, res));
-router.delete("/comments/delete/:commentId", authMiddleware, (req, res) => commentController.deleteComment(req, res));
-router.put("/comments/:commentId", authMiddleware, (req, res) => commentController.updateComment(req, res));
-router.get("/comments", authMiddleware, (req, res) => commentController.getAllComments(req, res));
+// Comment routes
+router.post("/comments", authMiddleware, commentController.createComment);
+router.get("/comments/post/:postId", authMiddleware, commentController.getCommentsByPost);
+router.get("/comments", authMiddleware, commentController.getAllComments);
+router.put("/comments/:commentId", authMiddleware, commentController.updateComment);
+router.delete("/comments/:commentId", authMiddleware, commentController.deleteComment);
 
-// like routes
-router.post('/like/:postId', authMiddleware, likeController.ToggleLike.bind(likeController));
-router.get("/like/post/:postId", authMiddleware,(req, res) => likeController.GetLikesByPostId(req, res));
-
+// Like routes
+router.post("/posts/:postId/like", authMiddleware, likeController.ToggleLike.bind(likeController));
+router.get("/posts/:postId/like", authMiddleware, likeController.GetLikesByPostId);
 
 module.exports = router;
