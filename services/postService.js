@@ -62,12 +62,12 @@ class PostService extends BaseService {
                 {
                     model: this.db.User,
                     as: "author",
-                    attributes: ["id", "username"]
+                    attributes: ["username"]
                 },
                 {
                     model: this.db.Category,
                     as: "category",
-                    attributes: ["id", "name"]
+                    attributes: ["name"]
                 },
                 // The 'likes' include is now replaced by the likeCount attribute above.
             ]

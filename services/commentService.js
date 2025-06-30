@@ -1,11 +1,8 @@
-const { where } = require("sequelize");
 const BaseService = require("../core/base_service");
 const db = require("../db/index");
-const { message } = require("../validators/userSchema");
-class commentService extends BaseService {
+class CommentService extends BaseService {
     constructor() {
         super(db.Comment);
-        this.db = db;
     }
 
     async createComment(commentPayload) {
@@ -40,7 +37,7 @@ class commentService extends BaseService {
         });
 
         if (!comment) {
-            throw new Error('Yorum bulunamadı veya yetkiniz yok');
+            throw new Error('Comment not found or you do not have permission to update it.');
         }
 
         return await comment.update(updateData);
@@ -55,10 +52,10 @@ class commentService extends BaseService {
             }
         });
         if (deletedRows === 0) {
-            throw new Error('Yorum bulunamadı veya silme yetkiniz yok');
+            throw new Error('Comment not found or you do not have permission to delete it.');
         }
 
-        return { message: "Yorum başarıyla silindi" }
+        return { message: "Comment deleted successfully" }
 
     }
 
@@ -71,4 +68,4 @@ class commentService extends BaseService {
 
 }
 
-module.exports = new commentService();
+module.exports = new CommentService();

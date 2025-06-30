@@ -2,10 +2,9 @@ const BaseService = require("../core/base_service");
 const db = require("../db/index");
 
 
-class categoryService extends BaseService {
+class CategoryService extends BaseService {
     constructor() {
         super(db.Category);
-        this.db = db;
     }
 
     async createCategory(categoryPayload) {
@@ -49,14 +48,8 @@ class categoryService extends BaseService {
     }
 
     async getAllCategories() {
-        const categories = await this.db.Category.findAll();
-
-        if (categories.length === 0) {
-            throw new Error("No categories found");
-        }
-
-        return categories;
+        return await this.db.Category.findAll();
     }
 }
 
-module.exports = new categoryService();
+module.exports = new CategoryService();

@@ -1,11 +1,9 @@
-const { post } = require("../app");
 const BaseService = require("../core/base_service");
 const db = require("../db/index");
 
-class likeService extends BaseService {
+class LikeService extends BaseService {
   constructor() {
     super(db.Like);
-    this.db = db;
   }
 
   async toggleLike({ userId, postId }) {
@@ -25,9 +23,14 @@ class likeService extends BaseService {
   }
 
   async getLikesByPostId(postId) {
-   const like_count= await this.db.Like.findAll({ where: { post_id: postId } });
-    return like_count;
+    // Renamed variable for clarity, as it returns an array of like objects, not a count.
+    const likes = await this.db.Like.findAll({ where: { post_id: postId } });
+    return likes;
+  }
+
+  async getLikeCountByPostId(postId) {
+    return await this.db.Like.count({ where: { post_id: postId } });
   }
 }
 
-module.exports = new likeService();
+module.exports = new LikeService();
