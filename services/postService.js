@@ -105,18 +105,20 @@ class PostService extends BaseService {
         limit = Math.min(100, Math.max(1, parseInt(limit)));
 
         const offset = (page - 1) * limit;
+
         const total = await this.db.Post.count();
 
         const results = await this.db.Post.findAll({
             offset,
             limit,
             order: [['createdAt', 'DESC']],
+            distinct: true,  // burada ekledik
             include: [
                 { model: this.db.User, as: "author", attributes: ["id", "username"] },
                 { model: this.db.Category, as: "category", attributes: ["id", "name"] },
             ],
         });
-
+        
         const hasMore = (page * limit) < total;
 
         return {
@@ -127,6 +129,7 @@ class PostService extends BaseService {
             results
         };
     }
+
 
     async searchPost(query) {
         return await this.db.Post.findAll({
