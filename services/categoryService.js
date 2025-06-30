@@ -5,6 +5,7 @@ const db = require("../db/index");
 class CategoryService extends BaseService {
     constructor() {
         super(db.Category);
+        this.db = db;
     }
 
     async createCategory(categoryPayload) {
