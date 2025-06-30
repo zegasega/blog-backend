@@ -105,7 +105,6 @@ class PostService extends BaseService {
         limit = Math.min(100, Math.max(1, parseInt(limit)));
 
         const offset = (page - 1) * limit;
-
         const total = await this.db.Post.count();
 
         const results = await this.db.Post.findAll({
@@ -118,7 +117,7 @@ class PostService extends BaseService {
             ],
         });
 
-        const hasMore = offset + results.length < total;
+        const hasMore = (page * limit) < total;
 
         return {
             page,
