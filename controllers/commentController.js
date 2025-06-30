@@ -61,7 +61,7 @@ class commentController extends BaseController {
         }
 
         try {
-            const updatedComment = await this.commentService.updateComment(commentId, userId, updateData);
+            const updatedComment = await this.service.commentService.updateComment(commentId, userId, updateData);
             return res.status(200).json(updatedComment);
         } catch (error) {
             return res.status(500).json({ error: error.message });
