@@ -3,6 +3,7 @@ const db = require("../db/index");
 class CommentService extends BaseService {
     constructor() {
         super(db.Comment);
+        this.db = db;
     }
 
     async createComment(commentPayload) {
