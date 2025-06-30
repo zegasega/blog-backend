@@ -30,7 +30,7 @@ router.delete("/auth/user", authMiddleware, (req, res) => userController.delete(
 // Post routes
 router.get("/posts", authMiddleware, (req, res) => postController.getAllPosts(req, res));
 router.get("/posts/search", authMiddleware, (req, res) => postController.searchPost(req, res));
-router.get("/posts/page/:page/limit/:limit", authMiddleware, (req, res) => postController.pagination(req, res));
+router.get("/posts/pagination/:page/:limit", authMiddleware, (req, res) => postController.pagination(req, res));
 router.get("/users/me/posts", authMiddleware, (req, res) => postController.getPostsByUserId(req, res));
 router.get("/posts/:id", authMiddleware, (req, res) => postController.getPostById(req, res));
 router.post("/posts", upload.single("image"), authMiddleware, (req, res) => postController.createPost(req, res));
